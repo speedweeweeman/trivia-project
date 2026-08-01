@@ -69,6 +69,10 @@ export default function Game() {
     }
 
     function buttonClick(questionid, answerid) {
+        setQuestionList(prev => prev.map((question, index) =>
+                index === questionid ? {...question, selected: answerid} : question
+            )
+        )
     }
 
     // elements
@@ -79,6 +83,7 @@ export default function Game() {
             <button 
                 key={butid} 
                 onClick={() => buttonClick(index, butid)}
+                className={butid === question.selected ? "selected" : null}
             >
                 {eachAns}
             </button>
