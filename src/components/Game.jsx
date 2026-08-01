@@ -3,8 +3,8 @@ import { useState } from 'react'
 export default function Game() {
 
 /*     fetch("https://opentdb.com/api.php?amount=5")
-        .this()
-        .this() */
+        .then(response => console.log(response))
+        .catch(error => console.log(error)) */
 
     const hardQuestions = [
         {
@@ -75,19 +75,41 @@ export default function Game() {
         )
     }
 
+    function checkAnswers() {
+        setQuestionList(prev => prev.map(question => 
+            question.selected === question.allAnswers.indexOf(question.correctAnswer) ?
+                {...question, correct: "yes"} :
+                {...question, correct: "no"}
+        ))
+    }
+
+    function buttonClass(question, butid) {
+        if (question.correct === "yes" && question.selected === butid) {
+            return "correct"
+        } else if (question.correct === "no" && question.selected === butid) {
+            return "incorrect"
+        }
+
+        if (question.selected === butid) {
+            return "selected"
+        }
+    }
+
     // elements
 
     const questionElements = questionList.map((question, index) => {
 
-        const allAnswersElements = question.allAnswers.map((eachAns, butid) => 
-            <button 
-                key={butid} 
-                onClick={() => buttonClick(index, butid)}
-                className={butid === question.selected ? "selected" : null}
-            >
-                {eachAns}
-            </button>
-        )
+        const allAnswersElements = question.allAnswers.map((eachAns, butid) => {
+            return (
+                <button 
+                    key={butid} 
+                    onClick={() => buttonClick(index, butid)}
+                    className={buttonClass(question, butid)}
+                >
+                    {eachAns}
+                </button>
+            )
+        })
 
         return (
             <>
@@ -100,6 +122,7 @@ export default function Game() {
     return (
         <div className="game">
             {questionElements}
+            <button onClick={checkAnswers}>Check Answers</button>
         </div>
     )
 }

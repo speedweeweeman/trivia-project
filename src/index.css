@@ -74,3 +74,11 @@ button:hover {
 .game .selected {
   background-color: #D6DBF5;
 }
+
+.game .correct {
+  background-color: #94D7A2;
+}
+
+.game .incorrect {
+  background-color: #F8BCBC;
+}
