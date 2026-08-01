@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 export default function Game() {
 
 /*     fetch("https://opentdb.com/api.php?amount=5")
@@ -43,16 +45,37 @@ export default function Game() {
         }
     ]
 
-    function buttonClick(questionid, answerid) {
-        console.log(`question: ${questionid} answer:${answerid}`)
+
+    // variables
+
+    // states
+    const [questionList, setQuestionList] = useState(() => createFullQuestions(hardQuestions))
+
+    // functions
+    function createFullQuestions(allQuestions) {
+
+        const fullQuestions = allQuestions.map(question => {
+            const correctAnswerPosition = Math.floor(Math.random()*4)
+            const allAnswersHolder = question.wrongAnswers
+            allAnswersHolder.splice(correctAnswerPosition, 0, question.correctAnswer)
+
+            return {
+                ...question,
+                allAnswers: allAnswersHolder
+            }
+        })
+        
+        return fullQuestions
     }
 
-    const questionElements = hardQuestions.map((question, index) => {
+    function buttonClick(questionid, answerid) {
+    }
 
-        const correctAnswerPosition = Math.floor(Math.random()*4)
-        const allAnswers = question.wrongAnswers
-        allAnswers.splice(correctAnswerPosition, 0, "yello")
-        const allAnswersElements = allAnswers.map((eachAns, butid) => 
+    // elements
+
+    const questionElements = questionList.map((question, index) => {
+
+        const allAnswersElements = question.allAnswers.map((eachAns, butid) => 
             <button 
                 key={butid} 
                 onClick={() => buttonClick(index, butid)}
@@ -63,8 +86,8 @@ export default function Game() {
 
         return (
             <>
-                <h2 key={index}>{question.question}</h2>
-                <div key={index}>{allAnswersElements}</div>
+                <h2 key={question.question}>{question.question}</h2>
+                <div key={question.correctAnswer}>{allAnswersElements}</div>
             </>
         )
     })

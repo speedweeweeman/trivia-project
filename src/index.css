@@ -70,3 +70,7 @@ button:hover {
   padding-bottom: 25px;
   border-bottom: 1px solid lightgrey;
 }
+
+.game button .selected {
+  background-color: #4D5B9E;
+}
