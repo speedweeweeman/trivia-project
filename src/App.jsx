@@ -13,7 +13,7 @@ export default function App() {
   return (
     <main>
       {didGameStart ? 
-        <Game /> :
+        <Game startGame={startGame}/> :
         <StartScreen startGame={startGame} />
       }
     </main>

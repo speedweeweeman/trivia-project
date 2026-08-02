@@ -1,56 +1,22 @@
 import { useState } from 'react'
 import { useEffect } from 'react'
+import Confetti from 'react-confetti'
 
-export default function Game() {
+export default function Game({startGame}) {
 
-    
-    const hardQuestions = [
-        {
-            question: "why did the chicken cross the road?",
-            correctAnswer: "oui",
-            wrongAnswers: [
-                "non",
-                "non",
-                "non",
-            ]
-        },
-        {
-            question: "who is the inventor of the apple?",
-            correctAnswer: "oui",
-            wrongAnswers: [
-                "non",
-                "non",
-                "non",
-            ]
-        },
-        {
-            question: "how much would could a woodchuck chuck?",
-            correctAnswer: "oui",
-            wrongAnswers: [
-                "non",
-                "non",
-                "non",
-            ]
-        },
-        {
-            question: "tomato potato?",
-            correctAnswer: "oui",
-            wrongAnswers: [
-                "non",
-                "non",
-                "non",
-            ]
-        }
-    ]
-    
-    
-    // variables
-    
-
-    
-    
     // states
     const [questionData, setQuestionData] = useState([])
+
+    // derived variables
+    const gameOver = questionData.length > 0 && questionData.every(question => 
+            Object.hasOwn(question, 'correct')
+    )
+    const amountCorrect = questionData.length > 0 ? 
+        questionData.reduce((acc, cur) =>
+            (cur.correct === "yes" ? acc + 1 : acc)
+        , 0) :
+        null
+    
 
     // functions
     useEffect(() => {
@@ -63,7 +29,8 @@ export default function Game() {
     function createFullQuestions(allQuestions) {
 
         const fullQuestions = allQuestions.map(question => {
-            const correctAnswerPosition = Math.floor(Math.random()*4)
+            const correctAnswerPosition = 
+                Math.floor(Math.random()*(question.incorrect_answers.length + 1))
             const allAnswersHolder = question.incorrect_answers
             allAnswersHolder.splice(correctAnswerPosition, 0, question.correct_answer)
 
@@ -77,14 +44,14 @@ export default function Game() {
     }
 
     function buttonClick(questionid, answerid) {
-        setQuestionList(prev => prev.map((question, index) =>
+        setQuestionData(prev => prev.map((question, index) =>
                 index === questionid ? {...question, selected: answerid} : question
             )
         )
     }
 
     function checkAnswers() {
-        setQuestionList(prev => prev.map(question => 
+        setQuestionData(prev => prev.map(question => 
             question.selected === question.allAnswers.indexOf(question.correct_answer) ?
                 {...question, correct: "yes"} :
                 {...question, correct: "no"}
@@ -129,8 +96,28 @@ export default function Game() {
 
     return (
         <div className="game">
+            {gameOver && <Confetti />}
+
             {questionElements}
-            <button className="check" onClick={checkAnswers}>Check Answers</button>
+
+            {gameOver ? 
+                <div className="game-end">
+                    <span>You got {amountCorrect}/5 right!</span> 
+                    <button
+                        className="check"
+                        onClick={startGame}
+                    >
+                        Play Again
+                    </button> 
+                </div> :
+                <button 
+                    className="check" 
+                    onClick={checkAnswers}
+                >
+                    Check Answers
+                </button>
+            }   
+
         </div>
     )
 }
