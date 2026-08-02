@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useEffect } from 'react'
 import Confetti from 'react-confetti'
+import { decode } from 'html-entities'
 
 export default function Game({startGame}) {
 
@@ -81,14 +82,14 @@ export default function Game({startGame}) {
                     onClick={() => buttonClick(index, butid)}
                     className={buttonClass(question, butid)}
                 >
-                    {eachAns}
+                    {decode(eachAns)}
                 </button>
             )
         })
 
         return (
             <div key={question.question}>
-                <h2>{question.question}</h2>
+                <h2>{decode(question.question)}</h2>
                 <p>{allAnswersElements}</p>
             </div>
         )
