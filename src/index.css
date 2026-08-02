@@ -53,7 +53,7 @@ button:hover {
 }
 
 .game h2 {
-  margin: 25px 0px 5px 0px;
+  margin: 18px 0px 5px 0px;
   font-size: 24px;
 }
 
@@ -66,9 +66,13 @@ button:hover {
   color: #293264;
 }
 
-.game div {
-  padding-bottom: 25px;
+.game p {
+  padding-bottom: 18px;
   border-bottom: 1px solid lightgrey;
+}
+
+.game div {
+  max-width: 670px;
 }
 
 .game .selected {
@@ -81,4 +85,11 @@ button:hover {
 
 .game .incorrect {
   background-color: #F8BCBC;
+}
+
+.game .check {
+  max-width: 200px;
+  align-self: center;
+  background-color: #4D5B9E;
+  color: #F5F7FB;
 }

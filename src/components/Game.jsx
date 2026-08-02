@@ -1,11 +1,9 @@
 import { useState } from 'react'
+import { useEffect } from 'react'
 
 export default function Game() {
 
-/*     fetch("https://opentdb.com/api.php?amount=5")
-        .then(response => console.log(response))
-        .catch(error => console.log(error)) */
-
+    
     const hardQuestions = [
         {
             question: "why did the chicken cross the road?",
@@ -44,20 +42,30 @@ export default function Game() {
             ]
         }
     ]
-
-
+    
+    
     // variables
+    
 
+    
+    
     // states
-    const [questionList, setQuestionList] = useState(() => createFullQuestions(hardQuestions))
+    const [questionData, setQuestionData] = useState([])
 
     // functions
+    useEffect(() => {
+        fetch("https://opentdb.com/api.php?amount=5")
+            .then(response => response.json())
+            .then(data => {setQuestionData(createFullQuestions(data.results))})
+            .catch(error => console.log(error))
+    }, [])
+
     function createFullQuestions(allQuestions) {
 
         const fullQuestions = allQuestions.map(question => {
             const correctAnswerPosition = Math.floor(Math.random()*4)
-            const allAnswersHolder = question.wrongAnswers
-            allAnswersHolder.splice(correctAnswerPosition, 0, question.correctAnswer)
+            const allAnswersHolder = question.incorrect_answers
+            allAnswersHolder.splice(correctAnswerPosition, 0, question.correct_answer)
 
             return {
                 ...question,
@@ -77,7 +85,7 @@ export default function Game() {
 
     function checkAnswers() {
         setQuestionList(prev => prev.map(question => 
-            question.selected === question.allAnswers.indexOf(question.correctAnswer) ?
+            question.selected === question.allAnswers.indexOf(question.correct_answer) ?
                 {...question, correct: "yes"} :
                 {...question, correct: "no"}
         ))
@@ -97,12 +105,12 @@ export default function Game() {
 
     // elements
 
-    const questionElements = questionList.map((question, index) => {
+    const questionElements = questionData.map((question, index) => {
 
         const allAnswersElements = question.allAnswers.map((eachAns, butid) => {
             return (
                 <button 
-                    key={butid} 
+                    key={eachAns}
                     onClick={() => buttonClick(index, butid)}
                     className={buttonClass(question, butid)}
                 >
@@ -112,17 +120,17 @@ export default function Game() {
         })
 
         return (
-            <>
-                <h2 key={question.question}>{question.question}</h2>
-                <div key={question.correctAnswer}>{allAnswersElements}</div>
-            </>
+            <div key={question.question}>
+                <h2>{question.question}</h2>
+                <p>{allAnswersElements}</p>
+            </div>
         )
     })
 
     return (
         <div className="game">
             {questionElements}
-            <button onClick={checkAnswers}>Check Answers</button>
+            <button className="check" onClick={checkAnswers}>Check Answers</button>
         </div>
     )
 }
